@@ -12,6 +12,7 @@
         :col-fields="colFields"
         :reducer="reducer"
         :default-show-settings="defaultShowSettings"
+        @updateReducer = "updateReducer"
       >
         <template slot="value" slot-scope="{ value }">
           {{ value | number }}
@@ -91,6 +92,12 @@ export default {
       this.isDataLoading = false
     }, 3000)
   },
+  mounted: function() {    
+    if (localStorage.customReducer) {
+      this.reducer = eval(localStorage.customReducer);
+    }
+  },
+  
   filters: {
     number: function(value) {
       return value.toLocaleString()
@@ -99,6 +106,14 @@ export default {
       return value.replace(/\b\w/g, l => l.toUpperCase())
     }
   },
+
+  methods: {
+    updateReducer: function(event){
+      const reducer = eval(event);
+      this.reducer = reducer
+      localStorage.customReducer= reducer;
+    }
+  }
 }
 </script>
 
