@@ -131,6 +131,7 @@
         </form>
 
         <pivot-table
+          :key="key"
           :data="data"
           :row-fields="internal.rowFields"
           :col-fields="internal.colFields"
@@ -225,17 +226,27 @@ export default {
       },
       dragging: false,
       showSettings: true,
-      customReducer: localStorage.customReducer ? localStorage.customReducer : this.reducer
+      customReducer: localStorage.customReducer ? localStorage.customReducer : this.reducer,
+      key: 0
     };
   },
   computed: {
     dragAreaClass: function() {
       return this.dragging ? "drag-area-highlight" : null;
+    },
+  },
+  watch : {
+    reducer: function() {
+      this.key = this.toggleKey();
     }
   },
   methods: {
     toggleShowSettings: function() {
       this.showSettings = !this.showSettings;
+    },
+    toggleKey: function() {
+      if(this.key ==0) return 1;
+      else return 0;
     },
     start: function() {
       this.dragging = true;
