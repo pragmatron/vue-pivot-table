@@ -55,7 +55,7 @@
           :options="{ group: 'fields' }"
           @start="start"
           @end="end"
-          @change="colsChange"
+          @change="colChange"
           class="d-flex flex-row drag-area border-primary"
           :class="dragAreaClass"
         >
@@ -90,7 +90,7 @@
           :options="{ group: 'fields' }"
           @start="start"
           @end="end"
-          @change="rowsChange"
+          @change="rowChange"
           class="d-flex flex-column align-items-start drag-area border-primary"
           :class="dragAreaClass"
         >
@@ -264,14 +264,17 @@ export default {
     end: function() {
       this.dragging = false;      
     },
-    colsChange: function () {
+    colChange: function () {
       localStorage.setItem("colFields", JSON.stringify(this.internal.colFields.map(item => item.label)))
+      this.$emit("colChange", this.internal.colFields);
     },
-    rowsChange : function () {
+    rowChange : function () {
       localStorage.setItem("rowFields", JSON.stringify(this.internal.rowFields.map(item => item.label)))
+      this.$emit("rowChange", this.internal.rowFields);
     },
-    fieldChange : function () {
+    fieldChange : function () {     
       localStorage.setItem("fields", JSON.stringify(this.internal.fields.map(item => item.label)))
+      this.$emit("fieldChange", this.internal.fields);
     },
     updateReducer: function() {
       this.$emit("updateReducer", this.customReducer);      

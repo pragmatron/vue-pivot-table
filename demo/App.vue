@@ -16,6 +16,9 @@
         :reducer="reducer"
         :default-show-settings="defaultShowSettings"
         @updateReducer="updateReducer"
+        @colChange="colChange"
+        @rowChange="rowChange"
+        @fieldChange="fieldChange"
       >
         <template slot="value" slot-scope="{ value }">{{ value | number }}</template>
         <template slot="genderHeader" slot-scope="{ value }">
@@ -222,6 +225,15 @@ export default {
     toggleKey: function() {
       if (this.key == 0) return 1;
       else return 0;
+    },
+    colChange(event) {
+      this.colFields = event;
+    },
+    rowChange(event) {
+      this.rowFields = event;
+    },
+    fieldChange(event) {
+      this.fields = event;
     },
     fillData: function(savedData, fields, settings) {
       if (savedData) {
