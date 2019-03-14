@@ -145,23 +145,23 @@ export default {
       data: data,
       asyncData: [],
       fields: [],
-      rowFields: [
-        {
+      colFields: [],
+      rowFields: [],
+      settings: {
+        country: {
           getter: item => item.country,
           label: "Country"
         },
-        {
+        gender: {
           getter: item => item.gender,
           label: "Gender",
           headerSlotName: "genderHeader"
-        }
-      ],
-      colFields: [
-        {
+        },
+        year: {
           getter: item => item.year,
           label: "Year"
         }
-      ],
+      },
       reducer: (sum, item) => sum + item.count,
       key: 0,
       defaultShowSettings: true,
@@ -172,6 +172,32 @@ export default {
     if (localStorage.customReducer) {
       this.reducer = eval(localStorage.customReducer);
     }
+
+    const allFields =
+      localStorage.fields && localStorage.colFields && localStorage.rowFields;
+    if (!allFields) {
+      // this.fields.push(this.settings.country);
+      this.colFields.push(this.settings.year);
+      this.rowFields.push(this.settings.gender, this.settings.country);
+
+      localStorage.setItem(
+        "fields",
+        JSON.stringify(this.fields.map(item => item.label))
+      );
+      localStorage.setItem(
+        "colFields",
+        JSON.stringify(this.colFields.map(item => item.label))
+      );
+      localStorage.setItem(
+        "rowFields",
+        JSON.stringify(this.rowFields.map(item => item.label))
+      );
+    } else {
+      this.fillData(localStorage.rowFields, this.rowFields, this.settings);
+      this.fillData(localStorage.fields, this.fields, this.settings);
+      this.fillData(localStorage.colFields, this.colFields, this.settings);
+    }
+
     this.isDataLoading = true;
     setTimeout(() => {
       this.asyncData = data;
@@ -196,6 +222,19 @@ export default {
     toggleKey: function() {
       if (this.key == 0) return 1;
       else return 0;
+    },
+    fillData: function(savedData, fields, settings) {
+      if (savedData) {
+        const arr = Object.values(JSON.parse(savedData));
+        arr.forEach(
+        element => {
+          for (let key in settings) {
+            if (settings[key].label == element) {
+              fields.push(settings[key]);
+            }
+          }
+        });
+      } else return;
     }
   },
   watch: {

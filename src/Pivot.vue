@@ -15,6 +15,7 @@
           :options="{ group: 'fields' }"
           @start="start"
           @end="end"
+          @change="fieldChange"
         >
           <div v-for="field in internal.fields" :key="field.key">
             <div class="btn btn-draggable btn-secondary">
@@ -54,6 +55,7 @@
           :options="{ group: 'fields' }"
           @start="start"
           @end="end"
+          @change="colsChange"
           class="d-flex flex-row drag-area border-primary"
           :class="dragAreaClass"
         >
@@ -88,6 +90,7 @@
           :options="{ group: 'fields' }"
           @start="start"
           @end="end"
+          @change="rowsChange"
           class="d-flex flex-column align-items-start drag-area border-primary"
           :class="dragAreaClass"
         >
@@ -234,11 +237,18 @@ export default {
     dragAreaClass: function() {
       return this.dragging ? "drag-area-highlight" : null;
     },
+    
   },
+  // updated(){
+  //   console.log(this.internal);
+  // },
   watch : {
     reducer: function() {
       this.key = this.toggleKey();
-    }
+    },
+    internal : function() {
+      console.log(this.internal);
+    } 
   },
   methods: {
     toggleShowSettings: function() {
@@ -249,10 +259,19 @@ export default {
       else return 0;
     },
     start: function() {
-      this.dragging = true;
+      this.dragging = true;      
     },
     end: function() {
-      this.dragging = false;
+      this.dragging = false;      
+    },
+    colsChange: function () {
+      localStorage.setItem("colFields", JSON.stringify(this.internal.colFields.map(item => item.label)))
+    },
+    rowsChange : function () {
+      localStorage.setItem("rowFields", JSON.stringify(this.internal.rowFields.map(item => item.label)))
+    },
+    fieldChange : function () {
+      localStorage.setItem("fields", JSON.stringify(this.internal.fields.map(item => item.label)))
     },
     updateReducer: function() {
       this.$emit("updateReducer", this.customReducer);      
